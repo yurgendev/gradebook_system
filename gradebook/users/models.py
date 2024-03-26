@@ -2,7 +2,7 @@ from django.core.validators import validate_email
 from django.db import models
 from django.db.models.functions import ExtractMonth, ExtractDay
 from datetime import datetime, timedelta
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 
 
 class PersonManager(BaseUserManager):
@@ -35,6 +35,19 @@ class Person(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+    groups = models.ManyToManyField(
+        Group,
+        blank=True,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss",
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        blank=True,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss",
+    )
+
     def __str__(self):
         components = [self.last_name, self.first_name, self.middle_name]
         formatted_str = ' '.join(component for component in components if component)
@@ -42,7 +55,6 @@ class Person(AbstractBaseUser, PermissionsMixin):
 
 
 class Teacher(Person):
-    # lessons = models.ManyToManyField(Lesson, related_name='teachers')
 
     class Meta:
         permissions = [
