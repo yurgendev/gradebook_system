@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.functions import ExtractMonth, ExtractDay
 from datetime import datetime, timedelta
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from dateutil.relativedelta import relativedelta
 
 
 class PersonManager(BaseUserManager):
@@ -85,7 +86,7 @@ class Student(Person):
     @classmethod
     def get_upcoming_birthdays(cls):
         today = datetime.today().date()
-        thirty_days_later = today + timedelta(days=30)
+        one_month_later = today + relativedelta(month=1)
 
         return cls.objects.annotate(
             month=ExtractMonth('date_of_birth'),
@@ -97,7 +98,7 @@ class Student(Person):
                 month=ExtractMonth('date_of_birth'),
                 day=ExtractDay('date_of_birth'),
             ).filter(
-                month=thirty_days_later.month, day__lte=thirty_days_later.day
+                month=one_month_later.month, day__lt=one_month_later.day
             )
         )
 
