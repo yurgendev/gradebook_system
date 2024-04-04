@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import Student, Teacher
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class SchoolClass(models.Model):
@@ -36,6 +38,19 @@ class Lesson(models.Model):
     def __str__(self):
         return f"{self.get_subject_display()} - {self.lesson_date}"
 
+    def clean(self):
+        # Check that the teacher_id is not None
+        if self.teacher_id is None:
+            raise ValidationError('A lesson must have a teacher.')
+
+        # Check that the lesson date is not in the past
+        if self.lesson_date < timezone.now().date():
+            raise ValidationError('The lesson date cannot be in the past.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
+
 
 class Grade(models.Model):
     GRADE_TYPES = [
@@ -54,3 +69,6 @@ class Grade(models.Model):
 
     def __str__(self):
         return str(self.value)
+
+
+

@@ -56,6 +56,7 @@ class Person(AbstractBaseUser, PermissionsMixin):
 
 
 class Teacher(Person):
+    date_of_birth = models.DateField(null=True, blank=True)
 
     class Meta:
         permissions = [
