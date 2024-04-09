@@ -1,0 +1,32 @@
+{% for news in page_obj %}
+    <h2>{{ news.title }}</h2>
+    <p>{{ news.content }}</p>
+    <p>Published on: {{ news.pub_date }}</p>
+    <p>Author: {{ news.author }}</p>
+    {% if news.image %}
+        <img src="{{ news.image.url }}" alt="{{ news.title }}">
+    {% endif %}
+    {% if news.video %}
+        <video controls>
+            <source src="{{ news.video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
