@@ -32,6 +32,9 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name_plural = "News"
+
     @property
     def likes_count(self):
         return self.like_set.count()
@@ -43,5 +46,3 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ('user', 'news')
-
-
