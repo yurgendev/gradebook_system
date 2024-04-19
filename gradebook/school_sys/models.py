@@ -32,9 +32,12 @@ class Lesson(Event):
         ('geography', 'Geography'),
         ('art', 'Art'),
     ]
+    LESSON_NUMBERS = [(i, str(i)) for i in range(1, 9)]
 
     teacher = models.ForeignKey('users.Teacher', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
+    lesson_number = models.IntegerField(choices=LESSON_NUMBERS, default=1)
+    class_room = models.CharField(default='101', max_length=10)
 
     def __str__(self):
         return f"{self.get_subject_display()} - {self.start.date()}"
