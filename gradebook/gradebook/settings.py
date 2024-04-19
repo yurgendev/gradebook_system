@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'school_sys.apps.SchoolSysConfig',
     'news.apps.NewsConfig',
+    'schedule',
 ]
 
 MIDDLEWARE = [
